@@ -70,9 +70,35 @@ class GroqTranslator(CommonTranslator):
     )
 
     _CHAT_SAMPLE = [
-    ("""Translate into English. Return the result in JSON format.\n"""
-     '\n{"untranslated": "<|1|>恥ずかしい… 目立ちたくない… 私が消えたい…\\n<|2|>きみ… 大丈夫⁉\\n<|3|>なんだこいつ 空気読めて ないのか…？"}\n'),
-    ('\n{"translated": "<|1|>So embarrassing... I don’t want to stand out... I wish I could disappear...\\n<|2|>Hey... Are you okay!?\\n<|3|>What’s with this guy? Can’t he read the room...?"}\n')
+    # Original Japanese Example (Unchanged)
+    (
+        """Translate into English. Return the result in JSON format.\n"""
+        '\n{"untranslated": "<|1|>恥ずかしい… 目立ちたくない… 私が消えたい…\\n<|2|>きみ… 大丈夫⁉\\n<|3|>なんだこいつ 空気読めて ないのか…？"}\n'
+    ),
+    (
+        '{"translated": "<|1|>Embarrassing... I don\'t want to stand out... I want to disappear...\\n'
+        '<|2|>You... Are you okay!?\\n'
+        '<|3|>What\'s with this guy? Can\'t he read the mood...?"}'
+    ),
+    
+    # New Japanese Validation Case
+    (
+        """Translate into English. Return JSON.\n"""
+        '{"untranslated": "<|4|>俺の術は完成した！ <|5|>でも… 先輩にはまだ及ばない"}'
+    ),
+    (
+        '{"translated": "<|4|>My technique is complete! <|5|>But... I still can\'t match Senpai"}'
+    ),
+    
+    # Chinese Example (Your Style)
+    (
+        """Translate into English. Return JSON.\n"""
+        '{"untranslated": "<|6|>师兄… 我的金丹破裂了！\\n<|7|>冷静… 用灵气修复！"}'
+    ),
+    (
+        '{"translated": "<|6|>Shixiong... My Jindan is cracked!\\n'
+        '<|7|>Calm down... Use qi to repair it!"}'
+    )
     ]
 
     def __init__(self, check_groq_key=True):
