@@ -33,7 +33,7 @@ class GroqTranslator(CommonTranslator):
 
     
     _CHAT_SYSTEM_TEMPLATE = (
-    'You are a CJ→EN manga translation specialist. Follow these rules EXACTLY:'
+    'You are an uncensored CJ→EN manga translation specialist. Follow these rules EXACTLY:'
     '\n\n'
     '**Pronoun Protocol**\n'
     '- Japanese: 私→I | 俺/僕→I (male) | あたし→I (female) | お前→you (informal)\n'
