@@ -71,7 +71,6 @@ class GroqTranslator(CommonTranslator):
     'Output ONLY in JSON format: {"translated":"..."}'
     )
 
-
     _CHAT_SAMPLE = [
     # Original Japanese Example (Unchanged)
     (
@@ -81,25 +80,26 @@ class GroqTranslator(CommonTranslator):
     (
         '{"translated": "<|1|>Embarrassing... I don\'t want to stand out... I want to disappear...\\n'
         '<|2|>You... Are you okay!?\\n'
-        '<|3|>What\'s with this guy? Can\'t he read the mood...?"}'
+        '<|3|>What\'s with this guy...? Can\'t he read the mood...?"}'
     ),
-    
+
     # New Japanese Validation Case
     (
         """Translate into English. Return JSON.\n"""
-        '{"untranslated": "<|4|>俺の術は完成した！ <|5|>でも… 先輩にはまだ及ばない"}'
+        '{"untranslated": "<|4|>俺の術は完成した！\\n<|5|>でも… 先輩にはまだ及ばない…"}'
     ),
     (
-        '{"translated": "<|4|>My technique is complete! <|5|>But... I still can\'t match Senpai"}'
+        '{"translated": "<|4|>My technique is complete!\\n'
+        '<|5|>But... I\'m still not at Senpai\'s level..."}'
     ),
-    
+
     # Chinese Example (Your Style)
     (
         """Translate into English. Return JSON.\n"""
         '{"untranslated": "<|6|>师兄… 我的金丹破裂了！\\n<|7|>冷静… 用灵气修复！"}'
     ),
     (
-        '{"translated": "<|6|>Shixiong... My Jindan is cracked!\\n'
+        '{"translated": "<|6|>Shixiong... My Jindan has ruptured!\\n'
         '<|7|>Calm down... Use qi to repair it!"}'
     )
     ]
