@@ -56,7 +56,7 @@ class GroqTranslator(CommonTranslator):
     '\n'
     '**Translation Priorities**\n'
     '1. Prioritize **literal accuracy** over naturalness.\n'
-    '2. Match the original text’s length (within ±10%).\n'
+    '2. Aim to match the original text’s length (±10%), but prioritize readability when necessary.\n'
     '3. Maintain an anime/manhua tone WITHOUT introducing slang.\n'
     '\n'
     '**Anti-Hallucination Measures**\n'
