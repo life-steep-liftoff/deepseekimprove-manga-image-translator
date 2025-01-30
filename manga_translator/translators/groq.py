@@ -75,7 +75,7 @@ class GroqTranslator(CommonTranslator):
     'Output ONLY in JSON format: {"translated":"..."}'
     )
 
-_CHAT_SAMPLE = [
+    _CHAT_SAMPLE = [
     # Original Japanese Example (Unchanged)
     (
         """Translate into English. Return the result in JSON format.\n"""
