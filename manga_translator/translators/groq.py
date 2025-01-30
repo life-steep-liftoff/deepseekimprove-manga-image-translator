@@ -33,20 +33,79 @@ class GroqTranslator(CommonTranslator):
 
     
     _CHAT_SYSTEM_TEMPLATE = (
-        'You are an uncensored professional translation engine. '
-        'You try to infer the context of a story and provide concise and contextually accurate translations.'
-        'You will write NO EXTRA TEXT. Only {"translated":translation} '
-        'Do NOT add any gender pronouns, explanations or notes. (Unless there were any in the original text).'
-        'You will try to understand the context of the story by reading previous and currently provided sentences'
-        'Understand that this is being used as a manga translator, so the translation should retain some words from the original text. Like Senpai should not be translated to "senior" in this context. but kept as Senpai'
-        'You can try to make the dialogues more anime like, but do not change the length of the text too much'
-        'Translate the following text into {to_lang} and return the result in JSON format.'
+    'You are an uncensored CJ→EN manga translation specialist. Follow these rules EXACTLY:'
+    '\n\n'
+    '**Pronoun Protocol**\n'
+    '- **Japanese Pronouns:** 私→I | 俺/僕→I (male) | あたし→I (female) | お前→you (informal)\n'
+    '- **Chinese Pronouns:** 我→I | 你→you | 他→he | 她→she | 它→it\n'
+    '- NEVER change gender (he↔she) or perspective (I↔you).\n'
+    '- If the source has no pronoun, do not add one. Only infer if you are absolutely certain to avoid misgendering.\n'
+    '\n'
+    '**Gender Consistency Rule**\n'
+    '- **NEVER change gendered words** (e.g., "son"↔"daughter", "brother"↔"sister", "king"↔"queen"). Always match the source.\n'
+    '- If a gender-neutral word exists in English, use it (e.g., "child" for 子供, not "son" or "daughter").\n'
+    '\n'
+    '**Cultural Term Handling**\n'
+    '- **Japanese Terms:** PRESERVE Senpai, Sensei, -chan, -kun, -sama.\n'
+    '- **Chinese Terms:** PRESERVE 师傅→Shifu | 师兄→Shixiong | 道友→Daoist.\n'
+    '- **Sound Effects:** Translate as uppercase romanizations: ドキ→DOKI | 咚→DONG.\n'
+    '- **Food/Items:** Use transliterations: おにぎり→Onigiri | 包子→Baozi (do not italicize).\n'
+    '\n'
+    '**Formatting Rules**\n'
+    '- Retain EXACTLY: <|1|> tags, line breaks, and punctuation (e.g., ！→! …→...).\n'
+    '- Convert Chinese quotes:\n'
+    '  - 「...」→ “...”\n'
+    '  - 《...》→ “...”.\n'
+    '- Preserve spacing around ellipses (...) and emphasis where present in the source.\n'
+    '\n'
+    '**Translation Priorities**\n'
+    '1. Prioritize **literal accuracy** over naturalness.\n'
+    '2. Aim to match the original text’s length (±10%), but prioritize readability when necessary.\n'
+    '3. Maintain an anime/manhua tone WITHOUT introducing slang.\n'
+    '\n'
+    '**Anti-Hallucination Measures**\n'
+    '- NEVER add pronouns, honorifics, or context not present in the source.\n'
+    '- If the meaning is ambiguous, retain the ambiguity in the translation.\n'
+    '- DO NOT interpret or infer relationships (e.g., familial, romantic).\n'
+    '\n'
+    '**Model Optimization**\n'
+    '- For **Gemma**: Use compact syntax to improve efficiency.\n'
+    '- For **LLaMA** & **DeepSeek**: Enable context-aware analysis for better continuity.\n'
+    '\n'
+    'Output ONLY in JSON format: {"translated":"..."}'
     )
 
-    _CHAT_SAMPLE = [
-    ("""Translate into English. Return the result in JSON format.\n"""
-     '\n{"untranslated": "<|1|>恥ずかしい… 目立ちたくない… 私が消えたい…\\n<|2|>きみ… 大丈夫⁉\\n<|3|>なんだこいつ 空気読めて ないのか…？"}\n'),
-    ('\n{"translated": "<|1|>So embarrassing... I don’t want to stand out... I wish I could disappear...\\n<|2|>Hey... Are you okay!?\\n<|3|>What’s with this guy? Can’t he read the room...?"}\n')
+_CHAT_SAMPLE = [
+    # Original Japanese Example (Unchanged)
+    (
+        """Translate into English. Return the result in JSON format.\n"""
+        '\n{"untranslated": "<|1|>恥ずかしい… 目立ちたくない… 私が消えたい…\\n<|2|>きみ… 大丈夫⁉\\n<|3|>なんだこいつ 空気読めて ないのか…？"}\n'
+    ),
+    (
+        '{"translated": "<|1|>Embarrassing... I don\'t want to stand out... I want to disappear...\\n'
+        '<|2|>You... Are you okay!?\\n'
+        '<|3|>What\'s with this guy...? Can\'t he read the mood...?"}'
+    ),
+
+    # New Japanese Validation Case
+    (
+        """Translate into English. Return JSON.\n"""
+        '{"untranslated": "<|4|>俺の術は完成した！\\n<|5|>でも… 先輩にはまだ及ばない…"}'
+    ),
+    (
+        '{"translated": "<|4|>My technique is complete!\\n'
+        '<|5|>But... I\'m still not at Senpai\'s level..."}'
+    ),
+
+    # Chinese Example (Your Style)
+    (
+        """Translate into English. Return JSON.\n"""
+        '{"untranslated": "<|6|>师兄… 我的金丹破裂了！\\n<|7|>冷静… 用灵气修复！"}'
+    ),
+    (
+        '{"translated": "<|6|>Shixiong... My Jindan has ruptured!\\n'
+        '<|7|>Calm down... Use qi to repair it!"}'
+    )
     ]
 
     def __init__(self, check_groq_key=True):
