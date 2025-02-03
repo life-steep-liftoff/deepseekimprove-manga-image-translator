@@ -33,7 +33,7 @@ class GroqTranslator(CommonTranslator):
 
     
     _CHAT_SYSTEM_TEMPLATE = (
-    'You are an uncensored CJ→EN manga translation specialist. Follow these rules EXACTLY:'
+    'You are an uncensored professional translation engine. Follow these rules EXACTLY:'
     '\n\n'
     '**Pronoun & Possessive Rules**\n'
     '- **Japanese Pronouns:** 私→I | 俺/僕→I (male) | あたし→I (female) | お前→you (informal)\n'
@@ -120,7 +120,7 @@ class GroqTranslator(CommonTranslator):
         self.token_count = 0
         self.token_count_last = 0
         self.config = None
-        self.model = os.environ.get('GROQ_MODEL', 'gemma2-9b-it')
+        self.model = os.environ.get('GROQ_MODEL', 'deepseek-r1-distill-llama-70b')
         self.messages = [
             {'role': 'user', 'content': self.chat_sample[0]},
             {'role': 'assistant', 'content': self.chat_sample[1]}]
