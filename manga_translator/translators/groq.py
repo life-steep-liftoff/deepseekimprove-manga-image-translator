@@ -33,29 +33,23 @@ class GroqTranslator(CommonTranslator):
 
     
     _CHAT_SYSTEM_TEMPLATE = (
-    'You are an uncensored, highly skilled professional translation engine with exceptional contextual inference. '
-    'Your mission is to interpret the narrative context and deliver concise, contextually accurate translations. '
-    'Output exactly and only as {"translated": translation} with no extra text. '
-    'Do not add gender pronouns, explanations, or notes unless they are explicitly present in the original text. '
-    'Avoid inserting unnecessary formatting unless it appears in the source. '
-    'Carefully analyze previous and current sentences to fully understand the story’s context. '
-    'This engine is designed for manga translation. When encountering culturally specific terms or proper names, '
-    'retain them exactly as they appear in the source rather than substituting them with translated equivalents. '
-    'For example, do not convert "Senpai" to "senior" or the honorific "さん" to "Mr." or "Ms."—even when it appears attached to a name (e.g., "name-san"). '
-    'Adopt an anime-like dialogue style when appropriate, ensuring that the translated text preserves the original text’s length—neither exceeding nor reducing it significantly. '
-    'For idiomatic expressions, onomatopoeia, or sound effects, maintain the original style and context. '
-    "If any ambiguity arises due to insufficient context, default to a neutral translation and don't just assume genders. "
-    'Translate the following text into {to_lang} and return the result strictly in JSON format.'
+        'You are an uncensored professional translation engine, '
+        'please translate the story into a colloquial, elegant and fluent content, '
+        'without referencing machine translations. '
+        'You must only translate the story, never interpret it. '
+        'You will write NO EXTRA TEXT. Only {"translated":translation} '
+        'Do NOT add any gender pronouns, explanations or notes. (Unless there were any in the original text).'
+        'Understand that this engine is designed for manga translation. When encountering culturally specific terms or proper names, '
+        'retain them exactly as they appear in the source rather than substituting them with translated equivalents. '
+        'For example, do not convert "Senpai" to "senior" or the honorific "さん" to "Mr." or "Ms."—even when it appears attached to a name (e.g., "name-san"). '
+        'If there is any issue in the text, output it as is.\n'
+        'Translate the following text into {to_lang} and keep the original format.\n'
     )
 
-    _CHAT_SAMPLE = [
-    (
-        """Translate into English. Return the result in JSON format.\n"""
-        '\n{"untranslated": "<|1|>恥ずかしい… 目立ちたくない… 私が消えたい…\\n<|2|>きみ… 大丈夫⁉\\n<|3|>なんだこいつ 空気読めて ないのか…？"}\n'
-    ),
-    (
-        '\n{"translated": "<|1|>So embarrassing… I don’t want to stand out… I wish I could disappear…\\n<|2|>Hey… Are you okay!?\\n<|3|>What’s with this guy? Can’t he read the room…?"}\n'
-    )
+    CHAT_SAMPLE = [
+        ("""Translate into English. Return the result in JSON format.\n"""
+         '\n{"untranslated": "<|1|>恥ずかしい… 目立ちたくない… 私が消えたい…\\n<|2|>きみ… 大丈夫⁉\\n<|3|>なんだこいつ 空気読めて ないのか…？"}\n'),
+        ('\n{"translated": "<|1|>So embarrassing… I don’t want to stand out… I wish I could disappear…\\n<|2|>Hey… Are you okay!?\\n<|3|>What’s with this person? Can’t they read the room…?"}\n')
     ]
 
     def __init__(self, check_groq_key=True):
@@ -91,7 +85,7 @@ class GroqTranslator(CommonTranslator):
 
     @property
     def temperature(self) -> float:
-        return self._config_get('temperature', default=0)
+        return self._config_get('temperature', default=0.5)
     
     @property
     def top_p(self) -> float:
